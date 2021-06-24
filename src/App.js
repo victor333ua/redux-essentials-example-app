@@ -6,28 +6,32 @@ import {
   Redirect,
 } from 'react-router-dom'
 
-import { Navbar } from './app/Navbar'
+import { Container } from '@chakra-ui/layout'
+import { Header } from './features/Header'
+import { PostsList } from './features/posts/PostsList'
+import { NewPost } from './features/posts/NewPost'
+import {ExPost} from "./features/posts/ExPost";
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <div className="App">
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={() => (
-              <section>
-                <h2>Welcome to the Redux Essentials example app!</h2>
-              </section>
-            )}
-          />
-          <Redirect to="/" />
-        </Switch>
-      </div>
+      <Header />
+      <Container maxW="container.lg">
+          <Switch>
+            <Route exact path="/">
+              <PostsList />
+            </Route>
+            <Route exact path="/newPost" >
+              <NewPost />
+            </Route>
+            <Route path="/exPost/:postId" >
+                <ExPost />
+            </Route>
+            <Redirect to="/" />
+          </Switch>
+      </Container>
     </Router>
   )
-}
+};
 
 export default App
