@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SimpleGrid, Container, IconButton } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
 import { PostFromList } from './PostFromList'
-import { fetchPosts } from './postsSlice.js';
+import { fetchPosts, getAllPosts, getPostsStatus } from './postsSlice.js';
 
 export const PostsList = props => {
-    const posts = useSelector(state => state.posts.posts);
+    const posts = useSelector(getAllPosts);
     const history = useHistory();
-    const postsStatus = useSelector(state => state.posts.status);
+    const postsStatus = useSelector(getPostsStatus);
     const dispatch = useDispatch();
 
     const linkToAddPost = e => {
@@ -27,7 +27,7 @@ export const PostsList = props => {
 
 
     return (
-        <Container maxW="container.lg">
+        <Container maxW="container.md">
             <SimpleGrid
                 columns={[1, 1, 1, 1]}
                 spacing={[4, 4, 6]}

@@ -116,7 +116,8 @@ new Server({
         const template = randomFromArray(notificationTemplates)
         return {
           id: nanoid(),
-          date: faker.date.between(pastDate, now).toISOString(),
+          // date: faker.date.between(pastDate, now).toISOString(),
+          date: now.toISOString(),
           message: template,
           user: user.id,
           read: false,

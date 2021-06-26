@@ -42,4 +42,12 @@ const postsSlice = createSlice({
     }
 });
 
+export const getAllPosts = state => state.posts.posts;
+export const getPostsStatus = state => state.posts.status;
+export const getPostsError = state => state.posts.error;
+
+export const getAllUsers = state => state.posts.users;
+export const getUserById = (state, userId) => 
+    getAllUsers(state).find(user => user.id === userId);
+
 export default postsSlice.reducer;
