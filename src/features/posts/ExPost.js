@@ -2,13 +2,11 @@ import {useSelector} from "react-redux";
 import {Box, Heading, Text} from "@chakra-ui/react";
 import React from "react";
 import { useParams } from 'react-router-dom'
+import { getPostById } from "./postsSlice.js";
 
 export const ExPost = () => {
     const { postId } = useParams();
-
-    const post = useSelector(state =>
-        state.posts.posts.find(post => post.id === postId)
-    );
+    const post = useSelector(state => getPostById(state, postId));
 
     if (!post) {
         return (

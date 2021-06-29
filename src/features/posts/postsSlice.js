@@ -1,20 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
 import { client } from '../../api/client.js'
-
-const initialState = {
-    posts: [],
-    status: 'idle',
-    error: null
-}
 
 export const fetchPosts = createAsyncThunk(
     'posts/fetchPosts',
     async () => {
-        const response = await Promise.all([
-         client.get('/fakeApi/posts'),
-         client.get('/fakeApi/users')
-        ]);
-        return { posts: response[0].posts, users: response[1].users };
+        const response = await client.get('/fakeApi/posts');
+        return response.posts;
     }
 );
 
@@ -24,30 +15,42 @@ export const addPost = createAsyncThunk(
         const response = await client.post('/fakeApi/posts', { post });
         return response.post;
     }
-)
+);
+
+const postsAdapter = createEntityAdapter({
+    sortComparer: (a,b) => b.date.localeCompare(a.date)
+});
 
 const postsSlice = createSlice({
     name: 'posts',
-    initialState,
+
+    initialState: postsAdapter.getInitialState({ 
+        status: 'idle',
+        error: null
+    }),
 
     extraReducers: {
-        [fetchPosts.fulfilled]: (state, action) => {
-            state.posts = state.posts.concat(action.payload.posts);
-            state.users = action.payload.users;
+        [fetchPosts.fulfilled]: (state, { payload }) => {
+            postsAdapter.upsertMany(state, payload);
             state.status = 'completed';
         },
-        [addPost.fulfilled]: (state, action) => {
-            state.posts.push(action.payload);
-        }
+        [addPost.fulfilled]: postsAdapter.addOne
     }
 });
 
-export const getAllPosts = state => state.posts.posts;
 export const getPostsStatus = state => state.posts.status;
 export const getPostsError = state => state.posts.error;
 
-export const getAllUsers = state => state.posts.users;
-export const getUserById = (state, userId) => 
-    getAllUsers(state).find(user => user.id === userId);
+export const {
+    selectAll: getAllPosts,
+    selectIds: getAllPostsIds,
+    selectEntities: getPostsEntities,
+    selectById: getPostById
+} = postsAdapter.getSelectors(rootState => rootState.posts);
+
+export const getPostsByUserId = createSelector(
+    [getAllPosts, (_, userId) => userId],
+    (posts, userId) => posts.filter(post => post.user === userId)
+);   
 
 export default postsSlice.reducer;

@@ -1,16 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Flex, Heading, IconButton, useColorMode, Button, Badge, Text } from '@chakra-ui/react';
+import { Box, Container, Flex, Heading, IconButton, useColorMode, Button, Badge } from '@chakra-ui/react';
 import { ColorModeSwitcher} from './ColorModeSwitcher';
 import { MdHome, MdAndroid, MdRecordVoiceOver } from 'react-icons/md';
-import { getNewNotifications } from './notifications/slice.js';
+import { getAllNotes, getNewNotifications } from './notifications/slice.js';
 import { useDispatch, useSelector } from 'react-redux'
 
 const Header = () => {
     const { colorMode } = useColorMode();
 
     const dispatch = useDispatch();
-    const notes = useSelector(state => state.notifications);
+    const notes = useSelector(getAllNotes);
 
     const qntUnReadNotes = notes.filter(note => note.isNew).length;
 

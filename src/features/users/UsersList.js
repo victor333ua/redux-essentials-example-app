@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
 import { Link } from 'react-router-dom'
 import { ListItem, Heading, UnorderedList, Container, ListIcon } from "@chakra-ui/layout";
-import { getAllUsers } from "../posts/postsSlice.js";
+import { getAllUsers } from './usersSlice.js';
 import { MdInput} from 'react-icons/md'
 
 export const UsersList = () => {

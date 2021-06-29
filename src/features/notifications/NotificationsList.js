@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { getAllUsers } from "../posts/postsSlice.js";
+import { getAllUsers } from "../users/usersSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { Box, Container, Heading, UnorderedList, Badge } from '@chakra-ui/react'
-import { markAllAsRead, markAllAsOld } from './slice.js'
+import { Box, Container, Heading, UnorderedList, Badge, useColorMode } from '@chakra-ui/react'
+import { markAllAsRead, markAllAsOld, getAllNotesIds, getNoteById } from './slice.js'
 
 export const NotificationsList = () => {
+    const { colorMode } = useColorMode();
     const users = useSelector(getAllUsers);
-    const notes = useSelector(state => state.notifications);
+    const notesIds = useSelector(getAllNotesIds);
 
     const dispatch = useDispatch();
     const didUpdateOnly = () => dispatch(markAllAsRead());
@@ -20,19 +21,19 @@ export const NotificationsList = () => {
     }, []);
 
  // after every rendering
- // when we on the page and refresh notes
- // will be rendering twice   
+ // when we on the page and refresh notes   
     useEffect(() => {
         didUpdateOnly();
     });
 
-    const list = notes.map(note => {
+    const Notification = ({ noteId }) => {
+        const note = useSelector(state => getNoteById(state, noteId));
         const timeAgo = formatDistanceToNow(parseISO(note.date));
         const user = users.find(user => user.id === note.user) || 
         { name: 'Uknown User' };
 
         return (
-            <Box key={note.id} w="100%" p={1} borderRadius="lg"  borderWidth="1px">
+            <Box w="100%" p={1} borderRadius="lg"  borderWidth="1px">
                 {note.isNew && (
                     <Badge m={0.3} fontSize="xs" colorScheme="cyan">
                          New
@@ -57,11 +58,15 @@ export const NotificationsList = () => {
                 </Box>
             </Box>
         )
-    })
+    };
+
+    const list = notesIds.map(noteId => (
+        <Notification  key={noteId} noteId={noteId} />
+    ));
 
     return (
         <Container maxW="container.md">
-            <Heading as="h4" size="md">
+            <Heading  size="md" textColor={colorMode === 'dark' ? "white" : "black"} >
                 Notifications
             </Heading>
             <br/>   

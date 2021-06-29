@@ -1,11 +1,15 @@
 import {Box, Divider, Heading, IconButton, Text} from "@chakra-ui/react";
 import React from "react";
+import { useSelector } from 'react-redux';
 import { MdAllOut } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import { TimeAgo } from "./TimeAgo";
 import { PostAuthor } from "./PostAuthor.js"
+import { getPostById } from "./postsSlice.js";
 
-export const PostFromList = ({ post }) => {
+export const PostFromList = ({ postId }) => {
+    const post = useSelector(state => getPostById(state, postId));
+   
     return (
         <Box
             key={post.title}
@@ -32,7 +36,7 @@ export const PostFromList = ({ post }) => {
                     variant="outline"
                     colorScheme="teal"
                     as={Link}
-                    to={`/exPost/${post.id}`}
+                    to={`/exPost/${postId}`}
                     aria-label="Post"
                     icon={<MdAllOut />}
                     size="xs"

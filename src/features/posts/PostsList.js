@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SimpleGrid, Container, IconButton } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
 import { PostFromList } from './PostFromList'
-import { fetchPosts, getAllPosts, getPostsStatus } from './postsSlice.js';
+import { fetchPosts, getAllPostsIds, getPostsStatus } from './postsSlice.js';
+import { fetchUsers } from '../users/usersSlice.js'
 
-export const PostsList = props => {
-    const posts = useSelector(getAllPosts);
+export const PostsList = () => {
+    const postsIds = useSelector(getAllPostsIds);
     const history = useHistory();
     const postsStatus = useSelector(getPostsStatus);
     const dispatch = useDispatch();
@@ -20,31 +21,35 @@ export const PostsList = props => {
     useEffect(() => {
         if (postsStatus === 'idle') {
             dispatch(fetchPosts());
+            dispatch(fetchUsers());
         }
-    }, [postsStatus, dispatch])
+    }, [postsStatus, dispatch]);
 
-    const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date));
+    const content = 
+        postsIds.map(postId => (<PostFromList key={postId} postId={postId} />));
 
-
-    return (
-        <Container maxW="container.md">
-            <SimpleGrid
-                columns={[1, 1, 1, 1]}
-                spacing={[4, 4, 6]}
-                 py="4"
-                 position="relative"
-            >
-                {orderedPosts.map(post => (<PostFromList key={post.id} post={post} />))}
-            </SimpleGrid>
-            <IconButton
-                colorScheme="teal"
-                aria-label="New Post"
-                icon={<ChatIcon />}
-                position="absolute"
-                bottom={5}
-                right={5}
-                onClick={linkToAddPost}
-            />
-        </Container>
+    return ( postsStatus === 'completed' 
+        ? (
+            <Container maxW="container.md">
+                <SimpleGrid
+                    columns={[1, 1, 1, 1]}
+                    spacing={[4, 4, 6]}
+                    py="4"
+                    position="relative"
+                >
+                    {content}
+                </SimpleGrid>
+                <IconButton
+                    colorScheme="teal"
+                    aria-label="New Post"
+                    icon={<ChatIcon />}
+                    position="absolute"
+                    bottom={5}
+                    right={5}
+                    onClick={linkToAddPost}                   
+                />
+            </Container>
+        ) 
+        : null
     )
 }
