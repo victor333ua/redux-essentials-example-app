@@ -33,7 +33,13 @@ export const NotificationsList = () => {
         { name: 'Uknown User' };
 
         return (
-            <Box w="100%" p={1} borderRadius="lg"  borderWidth="1px">
+            <Container 
+                maxW="container.sm" 
+                p={4} 
+                borderRadius="lg"
+                border="1px"
+                borderColor="gray.500"
+            >
                 {note.isNew && (
                     <Badge m={0.3} fontSize="xs" colorScheme="cyan">
                          New
@@ -56,7 +62,7 @@ export const NotificationsList = () => {
                 <Box mt={0.3} fontStyle="italic" pl={4} fontSize="xs" >
                     {`${timeAgo} ago`}
                 </Box>
-            </Box>
+            </Container>
         )
     };
 
@@ -65,7 +71,7 @@ export const NotificationsList = () => {
     ));
 
     return (
-        <Container maxW="container.md">
+        <Container maxW="container.sm" paddingTop={4} marginTop={4}    >
             <Heading  size="md" textColor={colorMode === 'dark' ? "white" : "black"} >
                 Notifications
             </Heading>

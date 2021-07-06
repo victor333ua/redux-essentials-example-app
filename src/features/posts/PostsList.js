@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { SimpleGrid, Container, IconButton } from '@chakra-ui/react';
+import { SimpleGrid, IconButton, Container } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
 import { PostFromList } from './PostFromList'
 import { fetchPosts, getAllPostsIds, getPostsStatus } from './postsSlice.js';
@@ -30,7 +30,7 @@ export const PostsList = () => {
 
     return ( postsStatus === 'completed' 
         ? (
-            <Container maxW="container.md">
+            <>
                 <SimpleGrid
                     columns={[1, 1, 1, 1]}
                     spacing={[4, 4, 6]}
@@ -48,7 +48,7 @@ export const PostsList = () => {
                     right={5}
                     onClick={linkToAddPost}                   
                 />
-            </Container>
+            </>
         ) 
         : null
     )
